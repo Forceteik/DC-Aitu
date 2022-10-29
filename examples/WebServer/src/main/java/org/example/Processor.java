@@ -10,14 +10,27 @@ import java.nio.charset.StandardCharsets;
 /**
  * Processor of HTTP request.
  */
-public class Processor {
+public class Processor extends Thread{
+
      static Integer item = 0;
     private final Socket socket;
     private final HttpRequest request;
 
+
     public Processor(Socket socket, HttpRequest request) {
         this.socket = socket;
         this.request = request;
+
+    }
+
+    @Override
+    public void run() {
+        try {
+            System.out.println("Hello, I`m worker " + getId());
+            process();
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void process() throws IOException, InterruptedException {
@@ -51,6 +64,7 @@ public class Processor {
         }
         socket.close();
     }
+
 
 
     public void create() throws IOException{
